@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Score Calculator</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/genai": "https://esm.sh/@google/genai@^0.12.0"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Health Score Calculator</h1>
+            <p class="score-explanation">
+                This calculator provides a health score on a scale of 1 to 100. The closer your score is to 100, the healthier you are considered to be based on the provided metrics.
+            </p>
+        </header>
+        <main>
+            <form id="healthForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="age">Age (years):</label>
+                        <input type="number" id="age" name="age" min="1" max="120" required placeholder="e.g., 30">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer_not_to_say">Prefer not to say</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Height:</label>
+                        <div class="height-inputs">
+                            <div>
+                                <input type="number" id="height_ft" name="height_ft" min="1" max="8" step="1" required placeholder="e.g., 5">
+                                <label for="height_ft" class="unit-label">ft</label>
+                            </div>
+                            <div>
+                                <input type="number" id="height_in" name="height_in" min="0" max="11" step="1" required placeholder="e.g., 9">
+                                <label for="height_in" class="unit-label">in</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight (lbs):</label>
+                        <input type="number" id="weight" name="weight" min="20" max="700" required placeholder="e.g., 150">
+                    </div>
+                    <div class="form-group">
+                        <label for="systolic_bp">Blood Pressure (mmHg):</label>
+                        <div class="blood-pressure-inputs">
+                            <div>
+                                <input type="number" id="systolic_bp" name="systolic_bp" min="70" max="250" required placeholder="Systolic">
+                            </div>
+                            <span class="bp-separator">/</span>
+                            <div>
+                                <input type="number" id="diastolic_bp" name="diastolic_bp" min="40" max="150" required placeholder="Diastolic">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sleep">Average Sleep (hours/night):</label>
+                        <input type="number" id="sleep" name="sleep" min="0" max="24" step="0.5" required placeholder="e.g., 7.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="exercise">Exercise Days (per week):</label>
+                        <input type="number" id="exercise" name="exercise" min="0" max="7" required placeholder="e.g., 3">
+                    </div>
+                    <div class="form-group">
+                        <label for="fruitsVeggies">Fruits/Veggies Servings (per day):</label>
+                        <input type="number" id="fruitsVeggies" name="fruitsVeggies" min="0" max="20" required placeholder="e.g., 5">
+                    </div>
+                    <div class="form-group">
+                        <label>Smoker:</label>
+                        <div class="radio-group">
+                            <input type="radio" id="smokerYes" name="smoker" value="yes" required>
+                            <label for="smokerYes">Yes</label>
+                            <input type="radio" id="smokerNo" name="smoker" value="no">
+                            <label for="smokerNo">No</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Diabetes or Pre-diabetes:</label>
+                        <div class="radio-group">
+                            <input type="radio" id="diabetesNo" name="diabetes_status" value="no" required>
+                            <label for="diabetesNo">No</label>
+                            <input type="radio" id="diabetesPre" name="diabetes_status" value="prediabetes">
+                            <label for="diabetesPre">Pre-diabetes</label>
+                            <input type="radio" id="diabetesYes" name="diabetes_status" value="diabetes">
+                            <label for="diabetesYes">Diabetes</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Are you on a low carb diet?</label>
+                        <div class="radio-group">
+                            <input type="radio" id="lowCarbDietYes" name="low_carb_diet" value="yes" required>
+                            <label for="lowCarbDietYes">Yes</label>
+                            <input type="radio" id="lowCarbDietNo" name="low_carb_diet" value="no">
+                            <label for="lowCarbDietNo">No</label>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label>Cholesterol (mg/dL):</label>
+                        <div class="cholesterol-inputs">
+                            <div>
+                                <input type="number" id="ldl_cholesterol" name="ldl_cholesterol" min="30" max="300" required placeholder="LDL">
+                            </div>
+                             <div>
+                                <input type="number" id="hdl_cholesterol" name="hdl_cholesterol" min="10" max="120" required placeholder="HDL">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="blood_sugar">Average Blood Sugar Level (mg/dL):</label>
+                        <input type="number" id="blood_sugar" name="blood_sugar" min="50" max="400" required placeholder="e.g., 90">
+                    </div>
+                </div>
+                <button type="submit" id="calculateBtn" aria-label="Calculate your health score based on the provided metrics">Calculate My Health Score</button>
+            </form>
+            <div id="resultsSection" class="results-section" aria-live="polite">
+                <div id="loadingIndicator" style="display: none;">Calculating your score... <span class="spinner" role="img" aria-label="loading"></span></div>
+                <div id="errorDisplay" class="error-message" style="display: none;"></div>
+                <div id="scoreDisplay" style="display: none;">
+                    <h2>Your Health Score:</h2>
+                    <p class="score-value" id="scoreValue"></p>
+                    <p class="qualitative-score" id="qualitativeScore"></p>
+                    <h3>Personalized Advice:</h3>
+                    <p id="adviceText"></p>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <p>Disclaimer: This tool provides an estimate and general advice. Always consult with a healthcare professional for medical concerns.</p>
+        </footer>
+    </div>
+    <script type="module" src="./index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

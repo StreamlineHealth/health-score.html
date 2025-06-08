@@ -1,0 +1,6 @@
+{
+  "name": "Health Score Calculator",
+  "description": "Calculates a health score based on user-provided metrics using Gemini API.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
